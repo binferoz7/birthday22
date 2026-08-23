@@ -397,6 +397,8 @@ body {
    SECTION COMMON
 ════════════════════════════════════════════════ */
 .section-label {
+  display: flex; align-items: center; gap: 14px;}
+.section-label {
   display: flex; align-items: center; gap: 14px;
   justify-content: center;
   font-size: 0.68rem;
@@ -568,55 +570,6 @@ body {
   height: 100%;
   background: linear-gradient(to right, var(--violet), var(--rose), var(--gold));
   transition: width 0.1s linear;
-}
-
-/* ════════════════════════════════════════════════
-   VIDEO SECTION
-════════════════════════════════════════════════ */
-.video-section {
-  padding: 100px 24px;
-  position: relative;
-}
-.video-wrap {
-  max-width: 800px;
-  margin: 0 auto;
-  position: relative;
-}
-.video-glow {
-  position: absolute;
-  inset: -20px;
-  border-radius: 50px;
-  background: radial-gradient(ellipse, rgba(139,47,201,0.25), transparent 70%);
-  filter: blur(20px);
-  pointer-events: none;
-  animation: videoGlow 4s ease-in-out infinite alternate;
-}
-@keyframes videoGlow {
-  from { opacity: 0.6; transform: scale(0.98); }
-  to   { opacity: 1;   transform: scale(1.02); }
-}
-.video-frame {
-  border-radius: 28px;
-  overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.12);
-  background: #000;
-  box-shadow: 0 40px 100px rgba(0,0,0,0.6);
-  position: relative;
-}
-.video-frame video {
-  width: 100%; display: block;
-  max-height: 500px; object-fit: contain;
-}
-.video-overlay-top {
-  position: absolute; top: 0; left: 0; right: 0; height: 60px;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.15), transparent);
-  pointer-events: none;
-}
-.video-caption {
-  text-align: center; margin-top: 20px;
-  font-family: 'Playfair Display', serif;
-  font-style: italic; font-size: 1.05rem;
-  color: rgba(255,255,255,0.5);
 }
 
 /* ════════════════════════════════════════════════
@@ -808,6 +761,72 @@ body {
 }
 .conf-detail { font-size: 0.88rem; color: rgba(255,255,255,0.6); line-height: 1.8; }
 .conf-sign { margin-top: 16px; font-family: 'Dancing Script', cursive; font-size: 1.2rem; color: var(--rose-lt); }
+
+/* ════════════════════════════════════════════════
+   FAVORITE SONG
+════════════════════════════════════════════════ */
+.song-section { padding: 100px 24px; position: relative; }
+.song-card {
+  max-width: 560px; margin: 0 auto;
+  padding: 44px 36px;
+  text-align: center;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 28px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.35);
+}
+.song-note {
+  margin-bottom: 22px;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  color: rgba(255,255,255,0.58);
+}
+.song-photo-link {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 24px;
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 20px;
+  box-shadow: 0 20px 45px rgba(0,0,0,0.35);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+.song-photo-link:hover {
+  transform: translateY(-5px) rotate(-1deg);
+  box-shadow: 0 28px 60px rgba(255,45,111,0.3);
+}
+.song-photo {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  filter: saturate(1.8) contrast(1.25) brightness(1.08);
+}
+.song-photo-link::after {
+  content: '▶  Click me to listen';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(13,6,33,0.42);
+  color: #fff;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.7);
+  transition: background 0.3s ease;
+}
+.song-photo-link:hover::after { background: rgba(255,45,111,0.32); }
+.song-file-hint {
+  margin-top: 14px;
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.32);
+}
 
 /* ════════════════════════════════════════════════
    PHOTO COLLAGE
@@ -1072,7 +1091,7 @@ body { cursor: none; }
       <button type="button" class="num-btn zero" onclick="pinDigit('0')" aria-label="0">0</button>
     </div>
 
-    <div class="login-hint" id="login-hint" aria-live="polite">hint: My favourite date 🤍</div>
+    <div class="login-hint" id="login-hint" aria-live="polite">hint: First time in gazebo</div>
   </div>
 </div>
 
@@ -1127,7 +1146,7 @@ body { cursor: none; }
         <div class="collage-label">Our first cute photo together</div>
       </div>
       <div class="collage-card reveal reveal-delay-2">
-        <img src="photo2.jpg" alt="Memory 2" onerror="this.style.display='none'">
+        <img src="css/smile.png" alt="Memory 2" onerror="this.style.display='none'">
         <div class="collage-label">A moment I always smile about</div>
       </div>
       <div class="collage-card reveal reveal-delay-2">
@@ -1135,14 +1154,30 @@ body { cursor: none; }
         <div class="collage-label">That silly snap story</div>
       </div>
       <div class="collage-card reveal reveal-delay-4">
-        <img src="photo4.jpg" alt="Memory 4" onerror="this.style.display='none'">
+        <img src="css/bestday.png" alt="Memory 4" onerror="this.style.display='none'">
         <div class="collage-label">Forever grateful for this day</div>
+      </div>
+      <div class="collage-card reveal reveal-delay-2">
+        <img src="css/arab2.png" alt="Memory 6" onerror="this.style.display='none'">
+        <div class="collage-label">Last minute decisions</div>
+      </div>
+      <div class="collage-card reveal reveal-delay-2">
+        <img src="css/arnaa.png" alt="Memory 7" onerror="this.style.display='none'">
+        <div class="collage-label">One of my favorite snapshots</div>
+      </div>
+      <div class="collage-card reveal reveal-delay-4">
+        <img src="css/arnaaa.png" alt="Memory 8" onerror="this.style.display='none'">
+        <div class="collage-label">A moment made even brighter with you</div>
+      </div>
+      <div class="collage-card reveal reveal-delay-2">
+        <img src="css/first.png" alt="Memory 10" onerror="this.style.display='none'">
+        <div class="collage-label">A memory I will always treasure</div>
       </div>
     </div>
   </section>
 
   <!-- SLIDESHOW -->
-  <section class="slideshow-section">
+  <section class="slideshow-section" hidden>
     <!-- Python-generated SVG hexagonal grid background -->
     <div class="hex-bg" aria-hidden="true">
       <!-- Inline SVG pattern generated by procedural algorithm (Python-equivalent hex grid) -->
@@ -1179,44 +1214,32 @@ body { cursor: none; }
       <div class="slides-track reveal" id="slides-track">
         <div class="slide-progress"><div class="slide-progress-fill" id="slide-progress-fill"></div></div>
 
-        <div class="slide active" id="sl0" style="--colors:rgba(139,47,201,0.3)">
-          <div class="slide-placeholder">
-            <span class="slide-ph-icon">🌸</span>
-            <span class="slide-ph-text">photo1.jpg — replace with your image</span>
-          </div>
+        <div class="slide" id="sl2" style="--colors:rgba(0,201,184,0.3)">
+          <img src="css/arnaa.png" alt="Memory 3">
           <div class="slide-caption-bar">
-            <div class="slide-num">Memory 01 / 07</div>
+            <div class="slide-num">Memory 03 / 07</div>
             <div class="slide-caption-text">The first time we made a memory worth keeping</div>
           </div>
         </div>
 
-        <div class="slide" id="sl1" style="--colors:rgba(255,45,111,0.3)">
-          <div class="slide-placeholder">
-            <span class="slide-ph-icon">💙</span>
-            <span class="slide-ph-text">photo2.jpg — replace with your image</span>
-          </div>
+        <div class="slide" id="sl2" style="--colors:rgba(0,201,184,0.3)">
+          <img src="css/arnaa.png" alt="Memory 3">
           <div class="slide-caption-bar">
-            <div class="slide-num">Memory 02 / 07</div>
-            <div class="slide-caption-text">Every moment with you is a gift</div>
+            <div class="slide-num">Memory 03 / 07</div>
+            <div class="slide-caption-text">The first time we made a memory worth keeping</div>
           </div>
         </div>
 
         <div class="slide" id="sl2" style="--colors:rgba(0,201,184,0.3)">
-          <div class="slide-placeholder">
-            <span class="slide-ph-icon">✨</span>
-            <span class="slide-ph-text">photo3.jpg — replace with your image</span>
-          </div>
+          <img src="css/arnaa.png" alt="Memory 3">
           <div class="slide-caption-bar">
             <div class="slide-num">Memory 03 / 07</div>
-            <div class="slide-caption-text">Smiles that light up every room</div>
+            <div class="slide-caption-text">The first time we made a memory worth keeping</div>
           </div>
         </div>
 
         <div class="slide" id="sl3" style="--colors:rgba(247,201,72,0.3)">
-          <div class="slide-placeholder">
-            <span class="slide-ph-icon">🌙</span>
-            <span class="slide-ph-text">photo4.jpg — replace with your image</span>
-          </div>
+          <img src="css/arnaaa.png" alt="Memory 4">
           <div class="slide-caption-bar">
             <div class="slide-num">Memory 04 / 07</div>
             <div class="slide-caption-text">Adventures written in our hearts</div>
@@ -1224,10 +1247,7 @@ body { cursor: none; }
         </div>
 
         <div class="slide" id="sl4" style="--colors:rgba(59,130,246,0.3)">
-          <div class="slide-placeholder">
-            <span class="slide-ph-icon">💫</span>
-            <span class="slide-ph-text">photo5.jpg — replace with your image</span>
-          </div>
+          <img src="css/bday.png" alt="Memory 5">
           <div class="slide-caption-bar">
             <div class="slide-num">Memory 05 / 07</div>
             <div class="slide-caption-text">Here's to many more moments like these</div>
@@ -1235,10 +1255,7 @@ body { cursor: none; }
         </div>
 
         <div class="slide" id="sl5" style="--colors:rgba(255,122,170,0.3)">
-          <div class="slide-placeholder">
-            <span class="slide-ph-icon">🎀</span>
-            <span class="slide-ph-text">photo6.jpg — replace with your image</span>
-          </div>
+          <img src="css/first.png" alt="Memory 6">
           <div class="slide-caption-bar">
             <div class="slide-num">Memory 06 / 07</div>
             <div class="slide-caption-text">A special moment we'll always remember</div>
@@ -1248,7 +1265,7 @@ body { cursor: none; }
         <div class="slide" id="sl6" style="--colors:rgba(192,110,240,0.3)">
           <div class="slide-placeholder">
             <span class="slide-ph-icon">🌠</span>
-            <span class="slide-ph-text">photo7.jpg — replace with your image</span>
+            <span class="slide-ph-text">css/your-next-photo.jpg — add another image here</span>
           </div>
           <div class="slide-caption-bar">
             <div class="slide-num">Memory 07 / 07</div>
@@ -1262,31 +1279,6 @@ body { cursor: none; }
         <div class="slide-pips" id="slide-pips" role="tablist"></div>
         <button class="slide-arrow" onclick="slideNext()" aria-label="Next">&#8594;</button>
       </div>
-    </div>
-  </section>
-
-  <!-- VIDEO -->
-  <section class="video-section">
-    <div class="section-label reveal">🎬 just for you</div>
-    <div class="section-title reveal" style="background:linear-gradient(135deg,var(--gold),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">
-      A Special Video
-    </div>
-    <div class="video-wrap reveal">
-      <div class="video-glow" aria-hidden="true"></div>
-      <!--
-      ╔══════════════════════════════════════════════════════╗
-      ║  🎥 Replace YOUR_VIDEO.mp4 with your video filename  ║
-      ║  Place the file in the same folder as this HTML file ║
-      ╚══════════════════════════════════════════════════════╝
-      -->
-      <div class="video-frame">
-        <video controls autoplay muted loop playsinline>
-          <source src="YOUR_VIDEO.mp4" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
-        <div class="video-overlay-top"></div>
-      </div>
-      <div class="video-caption">A birthday memory made with love, just for you.</div>
     </div>
   </section>
 
@@ -1373,6 +1365,21 @@ body { cursor: none; }
         <div class="conf-shimmer"></div>
         <div id="conf-inner"></div>
       </div>
+    </div>
+  </section>
+
+  <!-- FAVORITE SONG -->
+  <section class="song-section">
+    <div class="section-label reveal">🎵 our song</div>
+    <div class="section-title reveal" style="background:linear-gradient(135deg,var(--teal),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">
+      Our Favorite Song
+    </div>
+    <div class="song-card reveal">
+      <p class="song-note">A song that always brings me back to us.</p>
+      <a class="song-photo-link" href="https://www.youtube.com/watch?v=44cICamRLwk" target="_blank" rel="noopener noreferrer" aria-label="Click me to listen to our favorite song">
+        <img class="song-photo" src="css/bday.png" alt="Cartoon-style memory">
+      </a>
+      <div class="song-file-hint">You already know this song.</div>
     </div>
   </section>
 
@@ -1650,7 +1657,7 @@ body { cursor: none; }
 /* ════════════════════════════════════════════════
    PIN LOCK
 ════════════════════════════════════════════════ */
-const PIN_CODE = '1909';
+const PIN_CODE = [49, 57, 48, 57].map(code => String.fromCharCode(code)).join('');
 let pinVal = '';
 
 function updatePinDisplay(){
@@ -1669,7 +1676,7 @@ function pinDel(){
   updatePinDisplay();
   const hint = document.getElementById('login-hint');
   hint.classList.remove('error');
-  hint.textContent = 'hint: our special date 🤍';
+  hint.textContent = 'hint: First time in gazebo';
 }
 
 function checkPin(){
@@ -1701,7 +1708,7 @@ function checkPin(){
     hint.textContent = 'ouch, try again 💔';
     pinVal='';
     updatePinDisplay();
-    setTimeout(()=>{ hint.classList.remove('error'); hint.textContent='hint: our special date 🤍'; }, 2000);
+    setTimeout(()=>{ hint.classList.remove('error'); hint.textContent='hint: First time in gazebo'; }, 2000);
   }
 }
 
@@ -1838,7 +1845,7 @@ function doConfirm(){
     for(let i=0;i<6;i++) setTimeout(()=>window.particleBurst(cx+Math.random()*160-80, cy+Math.random()*80-40, 18), i*200);
   }
 
-  const msg=`Date Confirmed! 🎉\n\nDate: ${str}\nColor: ${color}\n\nI'm ready to make every moment unforgettable.\n Ready to meet you 💙`;
+  const msg=`Date Confirmed! \n\nDate: ${str}\nColor: ${color}\n\nI'm ready to make every moment unforgettable.\n Ready to meet you `;
   const url=`https://wa.me/254769159245?text=${encodeURIComponent(msg)}`;
   setTimeout(()=>window.open(url,'_blank'), 1800);
 }
