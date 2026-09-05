@@ -11,20 +11,20 @@
    ROOT TOKENS
 ════════════════════════════════════════════════ */
 :root {
-  --rose:       #ff2d6f;
-  --rose-lt:    #ff7aaa;
-  --rose-dk:    #c4005a;
-  --violet:     #8b2fc9;
-  --violet-lt:  #c06ef0;
-  --gold:       #f7c948;
-  --gold-lt:    #ffe484;
-  --teal:       #00c9b8;
-  --teal-lt:    #7ff5ec;
-  --sky:        #3b82f6;
-  --midnight:   #0d0621;
-  --deep:       #160a30;
-  --ink:        #1a0533;
-  --cream:      #fff8f2;
+  --rose:       #2f80c9;
+  --rose-lt:    #76b7e8;
+  --rose-dk:    #1c5d91;
+  --violet:     #b68b52;
+  --violet-lt:  #e3c28f;
+  --gold:       #e8c98c;
+  --gold-lt:    #f5e2b8;
+  --teal:       #3f9fc4;
+  --teal-lt:    #9bd7e5;
+  --sky:        #4d9de0;
+  --midnight:   #102a43;
+  --deep:       #173b5e;
+  --ink:        #203040;
+  --cream:      #f7efe1;
   --glass:      rgba(255,255,255,0.06);
   --glass-bord: rgba(255,255,255,0.15);
 }
@@ -40,6 +40,7 @@ body {
   color: var(--cream);
   overflow-x: hidden;
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 /* ════════════════════════════════════════════════
@@ -56,11 +57,11 @@ body {
   opacity: 0.38;
   animation: auroraDrift var(--dur, 18s) ease-in-out infinite alternate;
 }
-.ab1 { width:700px;height:700px;background:radial-gradient(#8b2fc9,transparent 70%);top:-200px;left:-200px;--dur:22s; }
-.ab2 { width:600px;height:600px;background:radial-gradient(#ff2d6f,transparent 70%);top:10%;right:-150px;--dur:17s; }
-.ab3 { width:500px;height:500px;background:radial-gradient(#00c9b8,transparent 70%);bottom:5%;left:10%;--dur:25s; }
-.ab4 { width:400px;height:400px;background:radial-gradient(#f7c948,transparent 70%);bottom:-100px;right:20%;--dur:20s; }
-.ab5 { width:350px;height:350px;background:radial-gradient(#3b82f6,transparent 70%);top:40%;left:40%;--dur:15s; }
+.ab1 { width:700px;height:700px;background:radial-gradient(#b68b52,transparent 70%);top:-200px;left:-200px;--dur:22s; }
+.ab2 { width:600px;height:600px;background:radial-gradient(#2f80c9,transparent 70%);top:10%;right:-150px;--dur:17s; }
+.ab3 { width:500px;height:500px;background:radial-gradient(#3f9fc4,transparent 70%);bottom:5%;left:10%;--dur:25s; }
+.ab4 { width:400px;height:400px;background:radial-gradient(#e8c98c,transparent 70%);bottom:-100px;right:20%;--dur:20s; }
+.ab5 { width:350px;height:350px;background:radial-gradient(#4d9de0,transparent 70%);top:40%;left:40%;--dur:15s; }
 @keyframes auroraDrift {
   0%   { transform: translate(0,0) scale(1);   opacity:.32; }
   33%  { transform: translate(40px,-30px) scale(1.08); opacity:.44; }
@@ -90,6 +91,7 @@ body {
 #login-screen {
   position: fixed; inset: 0; z-index: 9000;
   display: flex; align-items: center; justify-content: center;
+  perspective: 1400px;
   transition: opacity 1.4s cubic-bezier(.4,0,.2,1), transform 1.4s cubic-bezier(.4,0,.2,1);
 }
 #login-screen.fade-out {
@@ -98,25 +100,339 @@ body {
   pointer-events: none;
 }
 
+/* Envelope reveal before the PIN screen */
+#envelope-screen {
+  position: absolute; inset: 0; z-index: 3;
+  min-height: 100vh; min-height: 100dvh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: clamp(12px, 2vh, 24px);
+  padding: 28px 18px 30px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(232,201,140,0.2), transparent 28%),
+    radial-gradient(circle at 82% 78%, rgba(63,159,196,0.2), transparent 30%),
+    linear-gradient(145deg, rgba(16,42,67,0.35), rgba(10,25,42,0.72));
+  transition: opacity 0.8s ease 0.4s, visibility 0.8s ease 0.4s;
+}
+#envelope-screen.open {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.envelope-wrap {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center;
+  width: min(1240px, 96vw);
+  z-index: 1;
+  text-align: center;
+}
+.envelope-heart-field { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.background-heart {
+  position: absolute;
+  color: var(--heart-color, rgba(255,244,214,0.65));
+  font-size: var(--heart-size, 1.5rem);
+  opacity: var(--heart-opacity, 0.7);
+  transform: rotate(var(--heart-rotation, 0deg));
+  filter: drop-shadow(0 0 10px rgba(232,201,140,0.35));
+  animation: backgroundHeartFloat var(--heart-duration, 5s) ease-in-out var(--heart-delay, 0s) infinite alternate;
+}
+@keyframes backgroundHeartFloat {
+  from { transform: translate(0, 4px) rotate(var(--heart-rotation, 0deg)); }
+  to { transform: translate(8px, -12px) rotate(calc(var(--heart-rotation, 0deg) + 12deg)); }
+}
+.envelope-eyebrow {
+  position: relative; z-index: 2;
+  margin-bottom: 10px;
+  color: var(--gold-lt);
+  font-size: clamp(0.62rem, 1vw, 0.78rem);
+  letter-spacing: clamp(3px, 0.7vw, 7px);
+  text-transform: uppercase;
+  opacity: 0.78;
+}
+.envelope-title {
+  position: relative; z-index: 2;
+  margin-bottom: clamp(12px, 2vh, 22px);
+  color: rgba(255,255,255,0.94);
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 5vw, 4.6rem);
+  font-weight: 400;
+  line-height: 1;
+}
+.envelope-title em { color: var(--gold-lt); }
+.envelope {
+  position: relative;
+  display: block;
+  width: min(1180px, 94vw, calc(70dvh * 1.72));
+  max-height: 70vh; max-height: 70dvh;
+  aspect-ratio: 1.72;
+  z-index: 1;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  overflow: hidden;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  filter: drop-shadow(0 38px 55px rgba(0,0,0,0.5));
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+.envelope:hover { transform: translateY(-10px) rotate(-1deg); filter: drop-shadow(0 48px 65px rgba(0,0,0,0.6)); }
+.envelope:focus-visible { outline: 2px solid var(--gold-lt); outline-offset: 10px; }
+.envelope-body {
+  position: absolute; inset: 0;
+  overflow: hidden;
+  border-radius: 10px;
+  background: linear-gradient(145deg, #f5e2b8, #b68b52);
+  border: 1px solid rgba(255,255,255,0.55);
+}
+.envelope-body::before, .envelope-body::after {
+  content: ''; position: absolute; bottom: -2px; z-index: 1;
+  width: 72%; height: 110%;
+  background: linear-gradient(135deg, #e3c28f, #9b6e3d);
+}
+.envelope-body::before { left: -35%; transform: rotate(32deg); }
+.envelope-body::after { right: -35%; transform: rotate(-32deg); }
+.envelope-flap {
+  position: absolute; inset: 0 0 auto; z-index: 3;
+  height: 58%;
+  transform-origin: top;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  background: linear-gradient(145deg, #ffecc7, #c7965a);
+  border-top: 1px solid rgba(255,255,255,0.7);
+  transition: transform 0.85s cubic-bezier(.2,.8,.25,1);
+}
+.envelope.open .envelope-flap { transform: rotateX(180deg); }
+.envelope-seal {
+  position: absolute; left: 50%; top: 53%; z-index: 4;
+  display: grid; place-items: center;
+  width: 58px; height: 58px;
+  transform: translate(-50%,-50%);
+  border-radius: 50%;
+  background: var(--rose-dk);
+  border: 3px solid var(--gold-lt);
+  color: var(--gold-lt);
+  font-size: 1.45rem;
+  box-shadow: 0 0 24px rgba(232,201,140,0.55);
+  transition: opacity 0.35s ease, transform 0.85s ease;
+}
+.envelope.open .envelope-seal { opacity: 0; transform: translate(-50%,-50%) scale(0.5); }
+.envelope-art {
+  position: absolute; left: 50%; bottom: 13%; z-index: 2;
+  transform: translateX(-50%);
+  color: rgba(28,93,145,0.72);
+  font-family: 'Dancing Script', cursive;
+  font-size: clamp(1.5rem, 3.5vw, 3.2rem);
+  white-space: nowrap;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.35);
+}
+.envelope-art::before, .envelope-art::after {
+  content: '✦';
+  position: absolute; top: 50%;
+  color: rgba(28,93,145,0.58);
+  font-family: 'Playfair Display', serif;
+  font-size: 0.48em;
+  transform: translateY(-50%);
+}
+.envelope-art::before { right: calc(100% + 22px); }
+.envelope-art::after { left: calc(100% + 22px); }
+.envelope-flower {
+  position: absolute; z-index: 2;
+  color: rgba(28,93,145,0.72);
+  font-size: clamp(2.2rem, 5vw, 4.8rem);
+  line-height: 1;
+  filter: drop-shadow(0 1px 0 rgba(255,255,255,0.3));
+}
+.envelope-flower::after {
+  content: '╱╲';
+  position: absolute; left: 50%; top: 72%;
+  color: rgba(28,93,145,0.58);
+  font-size: 0.55em;
+  letter-spacing: 0.2em;
+  transform: translateX(-50%) rotate(8deg);
+}
+.flower-left { left: 9%; bottom: 10%; transform: rotate(-18deg); }
+.flower-right { right: 9%; bottom: 10%; transform: rotate(18deg); color: rgba(47,93,130,0.68); }
+.envelope-botanical {
+  position: absolute; z-index: 2;
+  width: 18%; height: 1px;
+  bottom: 18%;
+  background: rgba(28,93,145,0.48);
+  transform-origin: center;
+}
+.botanical-left { left: 22%; transform: rotate(-18deg); }
+.botanical-right { right: 22%; transform: rotate(18deg); }
+.envelope-botanical::before, .envelope-botanical::after {
+  content: '❧';
+  position: absolute; top: -0.7em;
+  color: rgba(28,93,145,0.58);
+  font-size: clamp(1rem, 2vw, 1.8rem);
+}
+.envelope-botanical::before { left: 8%; transform: rotate(-35deg); }
+.envelope-botanical::after { right: 8%; transform: scaleX(-1) rotate(-35deg); }
+.envelope-label {
+  position: relative; z-index: 2;
+  margin-top: clamp(18px, 3vh, 30px);
+  color: rgba(255,255,255,0.8);
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 1.15rem;
+}
+.envelope-label span { display: block; margin-top: 6px; font: 0.68rem 'Raleway', sans-serif; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.42); }
+.envelope-heart {
+  position: absolute;
+  z-index: 0;
+  color: var(--rose-lt);
+  font-size: clamp(1.5rem, 3.4vw, 3.4rem);
+  line-height: 1;
+  filter: drop-shadow(0 0 14px rgba(118,183,232,0.7));
+  animation: heartFloat var(--heart-speed, 3.8s) ease-in-out infinite alternate;
+  pointer-events: none;
+}
+.heart-a { top: 22%; left: 1%; --heart-speed: 3.2s; transform: rotate(-18deg); }
+.heart-b { top: 42%; right: 0; --heart-speed: 4.1s; transform: rotate(16deg); color: var(--gold-lt); }
+.heart-c { bottom: 19%; left: 8%; --heart-speed: 4.8s; transform: rotate(12deg); }
+.heart-d { bottom: 14%; right: 7%; --heart-speed: 3.6s; transform: rotate(-14deg); color: var(--gold-lt); }
+.heart-e { top: 5%; right: 18%; --heart-speed: 4.5s; font-size: clamp(1rem, 2.1vw, 2rem); }
+@keyframes heartFloat {
+  from { opacity: 0.55; transform: translateY(5px) rotate(-12deg) scale(0.94); }
+  to { opacity: 1; transform: translateY(-12px) rotate(12deg) scale(1.08); }
+}
+.envelope-footer {
+  position: absolute; bottom: 28px; left: 24px; right: 24px;
+  display: flex; justify-content: space-between;
+  color: rgba(255,255,255,0.34);
+  font-size: 0.62rem; letter-spacing: 2px; text-transform: uppercase;
+}
+
 /* Morphing SVG background on login */
 #login-svg-bg {
   position: absolute; inset: 0; width: 100%; height: 100%;
   overflow: hidden;
 }
+#login-3d-canvas {
+  position: absolute; inset: 0; z-index: 1;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  opacity: 0.9;
+}
 
 .login-glass {
-  position: relative; z-index: 2;
-  background: rgba(13,6,33,0.72);
-  backdrop-filter: blur(32px) saturate(180%);
-  border: 1px solid rgba(255,255,255,0.14);
-  border-radius: 36px;
+  position: absolute; z-index: 2;
+  top: 61%; left: 50%;
+  opacity: 0;
+  transform: translate(-50%, -10%) rotateX(-85deg) scaleY(0.08) scaleX(0.92);
+  transform-origin: 50% 8%;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  transition: top 1.05s cubic-bezier(.2,.8,.25,1), opacity 0.7s ease, transform 1.05s cubic-bezier(.2,.8,.25,1), box-shadow 1.05s ease;
+  background:
+    repeating-linear-gradient(180deg, rgba(120,90,50,0.05) 0px, rgba(120,90,50,0.05) 1px, transparent 1px, transparent 30px),
+    linear-gradient(168deg, #fdf7e7 0%, #f7ecd0 45%, #f0e1bb 100%);
+  border: 1px solid rgba(120,90,45,0.28);
+  border-radius: 4px 4px 18px 18px;
   padding: 56px 48px 48px;
   width: min(480px, 92vw);
   text-align: center;
+  color: var(--ink);
   box-shadow:
-    0 0 0 1px rgba(139,47,201,0.3),
-    0 40px 120px rgba(0,0,0,0.6),
-    inset 0 1px 0 rgba(255,255,255,0.1);
+    0 0 0 1px rgba(232,201,140,0.4),
+    0 40px 100px rgba(60,38,15,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.7);
+}
+.login-glass.emerging {
+  z-index: 4;
+  top: 50%;
+  animation: paperLetterOut 1.9s cubic-bezier(.18,.78,.2,1) forwards;
+  box-shadow:
+    0 0 0 1px rgba(232,201,140,0.45),
+    0 46px 100px rgba(60,38,15,0.45),
+    0 10px 0 rgba(224,205,160,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.75);
+}
+@keyframes paperLetterOut {
+  /* the sheet slides up out of the envelope, still folded flat */
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -12%) rotateX(-85deg) rotateZ(-4deg) scaleY(0.08) scaleX(0.92);
+    filter: drop-shadow(0 4px 4px rgba(0,0,0,0.15));
+  }
+  16% {
+    opacity: 1;
+    transform: translate(-50%, -20%) rotateX(-80deg) rotateZ(-2deg) scaleY(0.1) scaleX(0.94);
+    filter: drop-shadow(0 8px 8px rgba(0,0,0,0.22));
+  }
+  /* first fold unfurls */
+  38% {
+    opacity: 1;
+    transform: translate(-50%, -33%) rotateX(-46deg) rotateZ(3deg) scaleY(0.42) scaleX(0.97);
+    filter: drop-shadow(0 20px 18px rgba(0,0,0,0.4));
+  }
+  /* second fold unfurls */
+  64% {
+    opacity: 1;
+    transform: translate(-50%, -45%) rotateX(-20deg) rotateZ(-1.5deg) scaleY(0.72) scaleX(0.99);
+    filter: drop-shadow(0 32px 30px rgba(0,0,0,0.5));
+  }
+  /* settles flat, facing the reader */
+  84% {
+    opacity: 1;
+    transform: translate(-50%, -50.5%) rotateX(-4deg) rotateZ(0.6deg) scaleY(1.02) scaleX(1.005);
+    filter: drop-shadow(0 46px 46px rgba(0,0,0,0.58));
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotateX(0deg) rotateZ(0deg) scaleY(1) scaleX(1);
+    filter: drop-shadow(0 52px 54px rgba(0,0,0,0.62));
+  }
+}
+.login-glass::before {
+  content: '';
+  position: absolute; left: 7%; right: 7%; top: -16px; height: 28px;
+  z-index: -1;
+  border-radius: 5px 5px 0 0;
+  background: linear-gradient(180deg, rgba(253,247,231,0.95), rgba(182,139,82,0.4));
+  transform: rotateX(62deg);
+  transform-origin: bottom;
+  box-shadow: 0 -5px 16px rgba(247,239,225,0.2);
+}
+
+/* Blurred calligraphy handwriting scattered across the whole paper */
+.login-calligraphy-field {
+  position: absolute; inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  filter: blur(2.6px);
+  pointer-events: none;
+}
+.calligraphy-word {
+  position: absolute;
+  font-family: 'Dancing Script', cursive;
+  font-weight: 700;
+  white-space: nowrap;
+  text-shadow: 0 1px 1px rgba(120,90,50,0.1);
+}
+
+/* Fold-crease lines: sell the "folded paper sheet" look while it unfolds */
+.fold-crease {
+  position: absolute; left: 5%; right: 5%; height: 1px;
+  z-index: 6;
+  background: linear-gradient(to right, transparent, rgba(16,42,67,0.5) 20%, rgba(16,42,67,0.5) 80%, transparent);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.15);
+  opacity: 0;
+  pointer-events: none;
+}
+.crease-1 { top: 33%; }
+.crease-2 { top: 66%; }
+.login-glass.emerging .fold-crease {
+  animation: creaseFade 1.9s cubic-bezier(.18,.78,.2,1) forwards;
+}
+.crease-2.fold-crease { animation-delay: 0.05s; }
+@keyframes creaseFade {
+  0%   { opacity: 0; }
+  20%  { opacity: 0.85; }
+  45%  { opacity: 0.7; }
+  70%  { opacity: 0.35; }
+  100% { opacity: 0; }
 }
 
 /* Floating orbs decorating the login card */
@@ -130,10 +446,10 @@ body {
   from { transform: scale(1) translateY(0);    opacity: var(--op-min,.5); }
   to   { transform: scale(1.15) translateY(-8px); opacity: var(--op-max,.9); }
 }
-.orb1 { width:80px;height:80px;background:radial-gradient(#ff2d6f,transparent);top:-30px;left:-20px;--op-min:.4;--op-max:.8;--op-dur:2.8s; }
-.orb2 { width:60px;height:60px;background:radial-gradient(#8b2fc9,transparent);top:-20px;right:-10px;--op-min:.3;--op-max:.7;--op-dur:3.4s; }
-.orb3 { width:50px;height:50px;background:radial-gradient(#f7c948,transparent);bottom:-15px;right:-15px;--op-min:.3;--op-max:.75;--op-dur:2.2s; }
-.orb4 { width:45px;height:45px;background:radial-gradient(#00c9b8,transparent);bottom:-10px;left:-10px;--op-min:.35;--op-max:.7;--op-dur:3.1s; }
+.orb1 { width:80px;height:80px;background:radial-gradient(#2f80c9,transparent);top:-30px;left:-20px;--op-min:.18;--op-max:.4;--op-dur:2.8s; }
+.orb2 { width:60px;height:60px;background:radial-gradient(#b68b52,transparent);top:-20px;right:-10px;--op-min:.15;--op-max:.35;--op-dur:3.4s; }
+.orb3 { width:50px;height:50px;background:radial-gradient(#e8c98c,transparent);bottom:-15px;right:-15px;--op-min:.18;--op-max:.4;--op-dur:2.2s; }
+.orb4 { width:45px;height:45px;background:radial-gradient(#3f9fc4,transparent);bottom:-10px;left:-10px;--op-min:.15;--op-max:.35;--op-dur:3.1s; }
 
 .login-crown {
   font-size: 3rem;
@@ -152,11 +468,11 @@ body {
   font-weight: 900;
   font-style: italic;
   line-height: 1;
-  background: linear-gradient(135deg, var(--gold), var(--rose-lt), var(--violet-lt));
+  background: linear-gradient(135deg, var(--rose-dk), var(--violet), var(--teal));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  filter: drop-shadow(0 0 30px rgba(247,201,72,0.4));
+  filter: drop-shadow(0 1px 1px rgba(255,255,255,0.5));
   margin-bottom: 6px;
 }
 
@@ -164,7 +480,7 @@ body {
   font-size: 0.8rem;
   letter-spacing: 3.5px;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.55);
+  color: rgba(32,48,64,0.55);
   margin-bottom: 36px;
 }
 
@@ -176,7 +492,7 @@ body {
 .pin-dot {
   width: 22px; height: 22px;
   border-radius: 50%;
-  border: 2px solid rgba(255,255,255,0.3);
+  border: 2px solid rgba(32,48,64,0.3);
   background: transparent;
   transition: all 0.25s cubic-bezier(.34,1.56,.64,1);
   position: relative;
@@ -210,9 +526,9 @@ body {
 .num-btn {
   aspect-ratio: 1;
   border: none; border-radius: 20px;
-  background: rgba(255,255,255,0.07);
-  border: 1px solid rgba(255,255,255,0.1);
-  color: var(--cream);
+  background: rgba(32,48,64,0.05);
+  border: 1px solid rgba(32,48,64,0.14);
+  color: var(--ink);
   font-family: 'Playfair Display', serif;
   font-size: 1.6rem;
   font-weight: 700;
@@ -224,25 +540,25 @@ body {
 .num-btn::before {
   content: '';
   position: absolute; inset: 0;
-  background: radial-gradient(circle at center, rgba(255,255,255,0.15) 0%, transparent 70%);
+  background: radial-gradient(circle at center, rgba(182,139,82,0.18) 0%, transparent 70%);
   opacity: 0;
   transition: opacity 0.2s;
 }
-.num-btn:hover { background: rgba(255,255,255,0.12); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+.num-btn:hover { background: rgba(32,48,64,0.1); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(60,38,15,0.2); }
 .num-btn:hover::before { opacity: 1; }
 .num-btn:active { transform: scale(0.94); }
-.num-btn.del { font-size: 1rem; color: rgba(255,255,255,0.6); }
+.num-btn.del { font-size: 1rem; color: rgba(32,48,64,0.6); }
 .num-btn.zero { grid-column: 2; }
 
 .login-hint {
   font-size: 0.76rem;
-  color: rgba(255,255,255,0.35);
+  color: rgba(32,48,64,0.42);
   letter-spacing: 1px;
   min-height: 20px;
   transition: all 0.25s;
 }
 .login-hint.error {
-  color: var(--rose-lt);
+  color: var(--rose-dk);
   animation: hintShake 0.4s ease;
 }
 @keyframes hintShake {
@@ -332,7 +648,7 @@ body {
   background-clip: text;
   background-size: 200% 200%;
   animation: nameGradient 5s ease-in-out infinite;
-  filter: drop-shadow(0 0 50px rgba(255,45,111,0.35));
+  filter: drop-shadow(0 0 50px rgba(47,128,201,0.35));
   margin-bottom: 8px;
 }
 @keyframes nameGradient {
@@ -464,7 +780,7 @@ body {
   background: rgba(255,255,255,0.03);
   border: 1px solid rgba(255,255,255,0.1);
   box-shadow:
-    0 0 0 1px rgba(139,47,201,0.2),
+    0 0 0 1px rgba(182,139,82,0.2),
     0 60px 120px rgba(0,0,0,0.5);
 }
 
@@ -489,7 +805,7 @@ body {
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   gap: 16px;
-  background: linear-gradient(135deg, var(--colors, #1a0533) 0%, rgba(22,10,48,0.9) 100%);
+  background: linear-gradient(135deg, var(--colors, #203040) 0%, rgba(23,59,94,0.9) 100%);
 }
 .slide-ph-icon { font-size: 3.5rem; opacity: 0.4; }
 .slide-ph-text {
@@ -537,9 +853,9 @@ body {
   backdrop-filter: blur(12px);
 }
 .slide-arrow:hover {
-  background: rgba(139,47,201,0.3);
+  background: rgba(182,139,82,0.3);
   border-color: var(--violet);
-  box-shadow: 0 0 24px rgba(139,47,201,0.4);
+  box-shadow: 0 0 24px rgba(182,139,82,0.4);
   transform: scale(1.08);
 }
 
@@ -604,7 +920,7 @@ body {
 }
 .wish-card:hover {
   transform: translateY(-10px) scale(1.02);
-  box-shadow: 0 30px 80px rgba(0,0,0,0.35), 0 0 40px rgba(139,47,201,0.15);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.35), 0 0 40px rgba(182,139,82,0.15);
   border-color: rgba(255,255,255,0.16);
 }
 .wish-card:hover::before { opacity: 1; }
@@ -652,7 +968,7 @@ body {
   content: '';
   position: absolute; inset: -1px;
   border-radius: 37px;
-  background: linear-gradient(135deg, rgba(255,45,111,0.3), rgba(139,47,201,0.3), rgba(0,201,184,0.2));
+  background: linear-gradient(135deg, rgba(47,128,201,0.3), rgba(182,139,82,0.3), rgba(63,159,196,0.2));
   z-index: -1;
   opacity: 0;
   transition: opacity 0.5s;
@@ -683,15 +999,15 @@ body {
 }
 .date-input:focus {
   border-color: var(--violet);
-  background: rgba(139,47,201,0.1);
-  box-shadow: 0 0 0 4px rgba(139,47,201,0.15);
+  background: rgba(182,139,82,0.1);
+  box-shadow: 0 0 0 4px rgba(182,139,82,0.15);
 }
 
 .date-result-box {
   display: none; margin-top: 24px;
   padding: 24px 26px;
-  background: rgba(139,47,201,0.12);
-  border: 1px solid rgba(139,47,201,0.3);
+  background: rgba(182,139,82,0.12);
+  border: 1px solid rgba(182,139,82,0.3);
   border-radius: 20px;
 }
 .dres-label { font-size: 0.68rem; letter-spacing: 2.5px; text-transform: uppercase; color: var(--violet-lt); margin-bottom: 6px; }
@@ -717,7 +1033,7 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative; overflow: hidden;
-  box-shadow: 0 16px 40px rgba(255,45,111,0.35);
+  box-shadow: 0 16px 40px rgba(47,128,201,0.35);
 }
 .confirm-btn::after {
   content: '';
@@ -727,7 +1043,7 @@ body {
 }
 .confirm-btn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 24px 60px rgba(255,45,111,0.5);
+  box-shadow: 0 24px 60px rgba(47,128,201,0.5);
 }
 .confirm-btn:hover::after { background: rgba(255,255,255,0.1); }
 .confirm-btn:active { transform: scale(0.97); }
@@ -736,8 +1052,8 @@ body {
   display: none;
   margin-top: 24px;
   padding: 32px 28px;
-  background: linear-gradient(135deg, rgba(255,45,111,0.12), rgba(139,47,201,0.12));
-  border: 1px solid rgba(255,45,111,0.3);
+  background: linear-gradient(135deg, rgba(47,128,201,0.12), rgba(182,139,82,0.12));
+  border: 1px solid rgba(47,128,201,0.3);
   border-radius: 24px;
   position: relative; overflow: hidden;
 }
@@ -794,7 +1110,7 @@ body {
 }
 .song-photo-link:hover {
   transform: translateY(-5px) rotate(-1deg);
-  box-shadow: 0 28px 60px rgba(255,45,111,0.3);
+  box-shadow: 0 28px 60px rgba(47,128,201,0.3);
 }
 .song-photo {
   display: block;
@@ -820,7 +1136,7 @@ body {
   text-shadow: 0 2px 12px rgba(0,0,0,0.7);
   transition: background 0.3s ease;
 }
-.song-photo-link:hover::after { background: rgba(255,45,111,0.32); }
+.song-photo-link:hover::after { background: rgba(47,128,201,0.32); }
 .song-file-hint {
   margin-top: 14px;
   font-size: 0.72rem;
@@ -862,7 +1178,7 @@ body {
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
   flex-direction: column; gap: 10px;
-  background: linear-gradient(135deg, var(--ph-c1, rgba(139,47,201,0.3)), var(--ph-c2, rgba(255,45,111,0.3)));
+  background: linear-gradient(135deg, var(--ph-c1, rgba(182,139,82,0.3)), var(--ph-c2, rgba(47,128,201,0.3)));
   font-size: 0.75rem; letter-spacing: 1.5px; text-transform: uppercase;
   color: rgba(255,255,255,0.4);
 }
@@ -875,10 +1191,10 @@ body {
   font-style: italic;
 }
 /* photo edit controls removed to keep original image exact */
-.collage-card:nth-child(1) { --ph-c1: rgba(255,45,111,0.3); --ph-c2: rgba(139,47,201,0.3); }
+.collage-card:nth-child(1) { --ph-c1: rgba(47,128,201,0.3); --ph-c2: rgba(182,139,82,0.3); }
 .collage-card:nth-child(2) { --ph-c1: rgba(0,201,184,0.3);  --ph-c2: rgba(59,130,246,0.3); }
-.collage-card:nth-child(3) { --ph-c1: rgba(247,201,72,0.3); --ph-c2: rgba(255,45,111,0.3); }
-.collage-card:nth-child(4) { --ph-c1: rgba(139,47,201,0.3); --ph-c2: rgba(0,201,184,0.3);  }
+.collage-card:nth-child(3) { --ph-c1: rgba(232,201,140,0.3); --ph-c2: rgba(47,128,201,0.3); }
+.collage-card:nth-child(4) { --ph-c1: rgba(182,139,82,0.3); --ph-c2: rgba(63,159,196,0.3);  }
 
 /* ════════════════════════════════════════════════
    COUNTDOWN / TICKER
@@ -929,7 +1245,7 @@ footer {
 footer::before {
   content: '';
   position: absolute; bottom: 0; left: 0; right: 0; height: 200px;
-  background: radial-gradient(ellipse at 50% 100%, rgba(139,47,201,0.15), transparent);
+  background: radial-gradient(ellipse at 50% 100%, rgba(182,139,82,0.15), transparent);
   pointer-events: none;
 }
 .footer-name {
@@ -984,6 +1300,28 @@ footer::before {
   .ticker-unit { min-width: 80px; padding: 20px 18px; }
   .ticker-num { font-size: 2.4rem; }
   .login-glass { padding: 40px 28px 36px; }
+  .envelope-label { font-size: 1rem; }
+  #envelope-screen { padding: 34px 16px 58px; }
+  .envelope-title { margin-bottom: 14px; }
+  .envelope-footer { bottom: 18px; font-size: 0.52rem; }
+  .envelope-heart { font-size: 1.6rem; }
+  .heart-a { left: -1%; }
+  .heart-b { right: -1%; }
+}
+
+@media(max-height:700px) and (orientation:landscape) {
+  #envelope-screen { gap: 8px; padding: 14px 18px 22px; }
+  .envelope-eyebrow { margin-bottom: 4px; }
+  .envelope-title { margin-bottom: 8px; font-size: clamp(1.5rem, 5vh, 2.8rem); }
+  .envelope { width: min(88vw, calc(58dvh * 1.72)); }
+  .envelope-label { margin-top: 8px; font-size: 0.9rem; }
+}
+
+@media(max-width:380px) {
+  #envelope-screen { padding-left: 10px; padding-right: 10px; }
+  .envelope-title { font-size: 1.8rem; }
+  .envelope-label { font-size: 0.9rem; }
+  .envelope-label span { font-size: 0.58rem; letter-spacing: 2px; }
 }
 
 /* ════════════════════════════════════════════════
@@ -1006,7 +1344,7 @@ body { cursor: none; }
   pointer-events: none;
   width: 36px; height: 36px;
   border-radius: 50%;
-  border: 1.5px solid rgba(255,45,111,0.5);
+  border: 1.5px solid rgba(47,128,201,0.5);
   transform: translate(-50%,-50%);
   transition: transform 0.18s ease, width 0.2s ease, height 0.2s ease;
 }
@@ -1041,11 +1379,11 @@ body { cursor: none; }
   <svg id="login-svg-bg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice"
        xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <defs>
-      <radialGradient id="lg1" cx="30%" cy="30%"><stop offset="0%" stop-color="#8b2fc9" stop-opacity="0.7"/><stop offset="100%" stop-color="#0d0621" stop-opacity="0"/></radialGradient>
-      <radialGradient id="lg2" cx="70%" cy="40%"><stop offset="0%" stop-color="#ff2d6f" stop-opacity="0.5"/><stop offset="100%" stop-color="#0d0621" stop-opacity="0"/></radialGradient>
-      <radialGradient id="lg3" cx="50%" cy="80%"><stop offset="0%" stop-color="#00c9b8" stop-opacity="0.35"/><stop offset="100%" stop-color="#0d0621" stop-opacity="0"/></radialGradient>
+      <radialGradient id="lg1" cx="30%" cy="30%"><stop offset="0%" stop-color="#b68b52" stop-opacity="0.7"/><stop offset="100%" stop-color="#102a43" stop-opacity="0"/></radialGradient>
+      <radialGradient id="lg2" cx="70%" cy="40%"><stop offset="0%" stop-color="#2f80c9" stop-opacity="0.5"/><stop offset="100%" stop-color="#102a43" stop-opacity="0"/></radialGradient>
+      <radialGradient id="lg3" cx="50%" cy="80%"><stop offset="0%" stop-color="#3f9fc4" stop-opacity="0.35"/><stop offset="100%" stop-color="#102a43" stop-opacity="0"/></radialGradient>
     </defs>
-    <rect width="1440" height="900" fill="#0d0621"/>
+    <rect width="1440" height="900" fill="#102a43"/>
     <ellipse cx="420" cy="270" rx="480" ry="350" fill="url(#lg1)">
       <animateTransform attributeName="transform" type="rotate" from="0 420 270" to="360 420 270" dur="30s" repeatCount="indefinite"/>
     </ellipse>
@@ -1059,7 +1397,53 @@ body { cursor: none; }
     <!-- Rendered via JS below, this SVG just holds the bg -->
   </svg>
 
+  <canvas id="login-3d-canvas" aria-hidden="true"></canvas>
+
+  <div id="envelope-screen" aria-label="Birthday envelope">
+    <div class="envelope-heart-field" id="envelope-heart-field" aria-hidden="true"></div>
+    <div class="envelope-wrap">
+      <span class="envelope-heart heart-a" aria-hidden="true">♥</span>
+      <span class="envelope-heart heart-b" aria-hidden="true">♥</span>
+      <span class="envelope-heart heart-c" aria-hidden="true">♥</span>
+      <span class="envelope-heart heart-d" aria-hidden="true">♥</span>
+      <span class="envelope-heart heart-e" aria-hidden="true">♥</span>
+      <div class="envelope-eyebrow">A private birthday letter</div>
+      <h1 class="envelope-title">For <em>Arna</em>, with love</h1>
+      <button type="button" class="envelope" id="envelope" aria-label="Open your birthday envelope">
+        <span class="envelope-body" aria-hidden="true"></span>
+        <span class="envelope-flap" aria-hidden="true"></span>
+        <span class="envelope-flower flower-left" aria-hidden="true">✿</span>
+        <span class="envelope-flower flower-right" aria-hidden="true">❀</span>
+        <span class="envelope-botanical botanical-left" aria-hidden="true"></span>
+        <span class="envelope-botanical botanical-right" aria-hidden="true"></span>
+        <span class="envelope-art" aria-hidden="true">Arna · 22</span>
+        <span class="envelope-seal" aria-hidden="true">❤</span>
+      </button>
+      <div class="envelope-label">A little surprise for you<span>click to open</span></div>
+    </div>
+    <div class="envelope-footer"><span>22 years of wonderful you</span><span>A letter made just for you</span></div>
+  </div>
+
   <div class="login-glass" id="login-card">
+    <div class="login-calligraphy-field" aria-hidden="true">
+      <span class="calligraphy-word" style="top:5%;left:6%;transform:rotate(-9deg);font-size:1.3rem;color:rgba(47,128,201,0.22);">Happy</span>
+      <span class="calligraphy-word" style="top:8%;left:52%;transform:rotate(7deg);font-size:1.15rem;color:rgba(182,139,82,0.24);">Birthday</span>
+      <span class="calligraphy-word" style="top:18%;left:20%;transform:rotate(-4deg);font-size:2.4rem;color:rgba(63,159,196,0.2);">22</span>
+      <span class="calligraphy-word" style="top:14%;left:80%;transform:rotate(11deg);font-size:0.95rem;color:rgba(28,93,145,0.2);">xoxo</span>
+      <span class="calligraphy-word" style="top:27%;left:60%;transform:rotate(9deg);font-size:1.05rem;color:rgba(47,128,201,0.2);">Love</span>
+      <span class="calligraphy-word" style="top:33%;left:4%;transform:rotate(5deg);font-size:1.1rem;color:rgba(182,139,82,0.22);">Arna</span>
+      <span class="calligraphy-word" style="top:31%;left:72%;transform:rotate(-7deg);font-size:1.35rem;color:rgba(63,159,196,0.2);">Forever</span>
+      <span class="calligraphy-word" style="top:44%;left:30%;transform:rotate(-11deg);font-size:1rem;color:rgba(28,93,145,0.18);">Shine bright</span>
+      <span class="calligraphy-word" style="top:48%;left:70%;transform:rotate(6deg);font-size:1.2rem;color:rgba(47,128,201,0.22);">Cheers</span>
+      <span class="calligraphy-word" style="top:58%;left:10%;transform:rotate(8deg);font-size:1rem;color:rgba(182,139,82,0.2);">Blessed</span>
+      <span class="calligraphy-word" style="top:62%;left:52%;transform:rotate(-5deg);font-size:1.5rem;color:rgba(63,159,196,0.2);">Joy</span>
+      <span class="calligraphy-word" style="top:70%;left:22%;transform:rotate(7deg);font-size:1rem;color:rgba(28,93,145,0.2);">Always</span>
+      <span class="calligraphy-word" style="top:74%;left:66%;transform:rotate(-9deg);font-size:1.1rem;color:rgba(47,128,201,0.2);">Sparkle</span>
+      <span class="calligraphy-word" style="top:82%;left:8%;transform:rotate(-4deg);font-size:1.05rem;color:rgba(182,139,82,0.22);">22 years</span>
+      <span class="calligraphy-word" style="top:85%;left:58%;transform:rotate(6deg);font-size:1.2rem;color:rgba(63,159,196,0.2);">Bestfriend</span>
+    </div>
+    <div class="fold-crease crease-1" aria-hidden="true"></div>
+    <div class="fold-crease crease-2" aria-hidden="true"></div>
     <!-- Orbs -->
     <div class="login-orb orb1"></div>
     <div class="login-orb orb2"></div>
@@ -1412,6 +1796,92 @@ body { cursor: none; }
 
 <script>
 /* ════════════════════════════════════════════════
+   LOGIN 3D BLUEPRINT SPHERE
+════════════════════════════════════════════════ */
+(function(){
+  const canvas = document.getElementById('login-3d-canvas');
+  const context = canvas.getContext('2d');
+  const points = [];
+  const rings = 10;
+  const segments = 20;
+  let width, height, rotation = 0;
+
+  for(let ring=1; ring<rings; ring++){
+    const latitude = Math.PI * (-0.5 + ring / rings);
+    const radius = Math.cos(latitude);
+    for(let segment=0; segment<segments; segment++){
+      const longitude = 2 * Math.PI * segment / segments;
+      points.push({
+        x: radius * Math.cos(longitude),
+        y: Math.sin(latitude),
+        z: radius * Math.sin(longitude),
+        ring,
+        segment
+      });
+    }
+  }
+
+  function resize(){
+    width = canvas.width = window.innerWidth * devicePixelRatio;
+    height = canvas.height = window.innerHeight * devicePixelRatio;
+    canvas.style.width = window.innerWidth + 'px';
+    canvas.style.height = window.innerHeight + 'px';
+    context.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+  }
+  resize();
+  window.addEventListener('resize', resize, {passive:true});
+
+  function project(point, centerX, centerY, scale){
+    const cos = Math.cos(rotation);
+    const sin = Math.sin(rotation);
+    const rotatedX = point.x * cos - point.z * sin;
+    const rotatedZ = point.x * sin + point.z * cos;
+    const depth = 2.8 / (3.8 - rotatedZ);
+    return { x: centerX + rotatedX * scale * depth, y: centerY + point.y * scale * depth, depth };
+  }
+
+  function draw(){
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const centerX = viewportWidth * 0.5;
+    const centerY = viewportHeight * 0.5;
+    const scale = Math.min(viewportWidth, viewportHeight) * 0.34;
+    const projected = points.map(point => project(point, centerX, centerY, scale));
+    context.clearRect(0, 0, viewportWidth, viewportHeight);
+    context.lineWidth = 0.7;
+
+    points.forEach((point, index) => {
+      const nextSegment = point.segment === segments - 1 ? index - segments + 1 : index + 1;
+      const nextRing = point.ring < rings - 1 ? index + segments : -1;
+      [nextSegment, nextRing].forEach(neighbor => {
+        if(neighbor < 0 || !projected[neighbor]) return;
+        const start = projected[index];
+        const end = projected[neighbor];
+        context.globalAlpha = Math.min(start.depth, end.depth) * 0.38;
+        context.strokeStyle = '#e8c98c';
+        context.beginPath();
+        context.moveTo(start.x, start.y);
+        context.lineTo(end.x, end.y);
+        context.stroke();
+      });
+    });
+
+    projected.forEach((point, index) => {
+      const source = points[index];
+      context.globalAlpha = 0.25 + point.depth * 0.7;
+      context.fillStyle = source.segment % 4 === 0 ? '#f5e2b8' : '#76b7e8';
+      context.beginPath();
+      context.arc(point.x, point.y, source.segment % 4 === 0 ? 2.2 : 1.1, 0, Math.PI * 2);
+      context.fill();
+    });
+    context.globalAlpha = 1;
+    rotation += 0.004;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ════════════════════════════════════════════════
    PYTHON-INSPIRED PROCEDURAL STAR FIELD
    (Mimics numpy random + matplotlib scatter)
    Star generation algorithm:
@@ -1677,6 +2147,35 @@ body { cursor: none; }
 ════════════════════════════════════════════════ */
 const PIN_CODE = [49, 57, 48, 57].map(code => String.fromCharCode(code)).join('');
 let pinVal = '';
+
+const envelope = document.getElementById('envelope');
+const envelopeScreen = document.getElementById('envelope-screen');
+const loginCard = document.getElementById('login-card');
+const envelopeHeartField = document.getElementById('envelope-heart-field');
+
+for(let i=0;i<90;i++){
+  const heart = document.createElement('span');
+  heart.className = 'background-heart';
+  heart.textContent = Math.random() > 0.18 ? '♥' : '♡';
+  heart.style.left = `${Math.random()*100}%`;
+  heart.style.top = `${Math.random()*100}%`;
+  heart.style.setProperty('--heart-size', `${0.7 + Math.random()*1.8}rem`);
+  heart.style.setProperty('--heart-opacity', `${0.25 + Math.random()*0.6}`);
+  heart.style.setProperty('--heart-rotation', `${-35 + Math.random()*70}deg`);
+  heart.style.setProperty('--heart-duration', `${3.5 + Math.random()*4}s`);
+  heart.style.setProperty('--heart-delay', `${Math.random()*-5}s`);
+  heart.style.setProperty('--heart-color', Math.random() > 0.5 ? 'rgba(255,244,214,0.72)' : 'rgba(118,183,232,0.64)');
+  envelopeHeartField.appendChild(heart);
+}
+
+envelope.addEventListener('click', () => {
+  envelope.classList.add('open');
+  setTimeout(() => loginCard.classList.add('emerging'), 420);
+  setTimeout(() => {
+    envelopeScreen.classList.add('open');
+    loginCard.focus({preventScroll:true});
+  }, 1550);
+});
 
 function updatePinDisplay(){
   for(let i=0;i<4;i++) document.getElementById('pd'+i).classList.toggle('filled', i<pinVal.length);
