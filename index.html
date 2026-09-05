@@ -129,11 +129,11 @@ body {
 .envelope-heart-field { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
 .background-heart {
   position: absolute;
-  color: var(--heart-color, rgba(255,244,214,0.65));
+  color: var(--heart-color, rgba(118,183,232,0.65));
   font-size: var(--heart-size, 1.5rem);
   opacity: var(--heart-opacity, 0.7);
   transform: rotate(var(--heart-rotation, 0deg));
-  filter: drop-shadow(0 0 10px rgba(232,201,140,0.35));
+  filter: drop-shadow(0 0 10px rgba(118,183,232,0.35));
   animation: backgroundHeartFloat var(--heart-duration, 5s) ease-in-out var(--heart-delay, 0s) infinite alternate;
 }
 @keyframes backgroundHeartFloat {
@@ -210,7 +210,7 @@ body {
   border-radius: 50%;
   background: var(--rose-dk);
   border: 3px solid var(--gold-lt);
-  color: var(--gold-lt);
+  color: var(--rose-lt);
   font-size: 1.45rem;
   box-shadow: 0 0 24px rgba(232,201,140,0.55);
   transition: opacity 0.35s ease, transform 0.85s ease;
@@ -289,9 +289,9 @@ body {
   pointer-events: none;
 }
 .heart-a { top: 22%; left: 1%; --heart-speed: 3.2s; transform: rotate(-18deg); }
-.heart-b { top: 42%; right: 0; --heart-speed: 4.1s; transform: rotate(16deg); color: var(--gold-lt); }
+.heart-b { top: 42%; right: 0; --heart-speed: 4.1s; transform: rotate(16deg); color: var(--rose-lt); }
 .heart-c { bottom: 19%; left: 8%; --heart-speed: 4.8s; transform: rotate(12deg); }
-.heart-d { bottom: 14%; right: 7%; --heart-speed: 3.6s; transform: rotate(-14deg); color: var(--gold-lt); }
+.heart-d { bottom: 14%; right: 7%; --heart-speed: 3.6s; transform: rotate(-14deg); color: var(--rose-lt); }
 .heart-e { top: 5%; right: 18%; --heart-speed: 4.5s; font-size: clamp(1rem, 2.1vw, 2rem); }
 @keyframes heartFloat {
   from { opacity: 0.55; transform: translateY(5px) rotate(-12deg) scale(0.94); }
@@ -2164,7 +2164,7 @@ for(let i=0;i<90;i++){
   heart.style.setProperty('--heart-rotation', `${-35 + Math.random()*70}deg`);
   heart.style.setProperty('--heart-duration', `${3.5 + Math.random()*4}s`);
   heart.style.setProperty('--heart-delay', `${Math.random()*-5}s`);
-  heart.style.setProperty('--heart-color', Math.random() > 0.5 ? 'rgba(255,244,214,0.72)' : 'rgba(118,183,232,0.64)');
+  heart.style.setProperty('--heart-color', 'rgba(118,183,232,0.64)');
   envelopeHeartField.appendChild(heart);
 }
 
