@@ -2364,7 +2364,7 @@ function doConfirm(){
 
   const msg=`Date Confirmed! \n\nDate: ${str}\nColor: ${color}\n\nI'm ready to make every moment unforgettable.\n Ready to meet you `;
   const url=`https://wa.me/254769159245?text=${encodeURIComponent(msg)}`;
-  setTimeout(()=>window.open(url,'_blank'), 1800);
+  setTimeout(()=>window.location.assign(url), 1800);
 }
 
 /* ════════════════════════════════════════════════
